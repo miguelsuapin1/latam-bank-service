@@ -1,10 +1,25 @@
 # Decision log
 
-## D-001 — Start on Supabase + Vercel (2026-09-25)
-**Status:** accepted (provisional)
-**Context:** Organizers recommend Snowflake / AWS / Azure / Databricks; we don't have accounts yet and data + exact instructions are pending.
-**Decision:** Next.js on Vercel for the service/UI, Supabase (Postgres, sa-east-1 São Paulo) for data, RLS-based customer-record isolation, and migrations.
-**Revisit when:** we have access to a recommended platform. Evaluate: managed ETL/lineage (Databricks/Snowflake), eval tooling, judging bonus for using a recommended platform, migration cost.
+## D-001: Hybrid AWS (source) + local DuckDB pipeline + Supabase (serving) (2026-09-25)
+**Status:** accepted. This replaces the provisional "Supabase + Vercel only" decision.
 
-## D-002 — Use case
-**Status:** open — choose one of: account/payment inquiries, card support, transaction disputes, credit-product eligibility. Decide once the dataset arrives.
+**Context**
+- The organizer dataset is in a read-only S3 bucket (`us-east-2`): 12,505 daily-partitioned CSVs. The current copy under `data/` is 5.3 GB, of which `digital_events` is 3.6 GB. `data_backup_20260831/` is an incomplete older copy and is ignored.
+- The organizers list Snowflake/AWS/Databricks/Azure only as "(maybe) valuable resources". Nothing in the rules rewards using them.
+- The judges want a trusted test session, per-customer access enforced outside the model, reproducible pipelines with contracts and lineage, and a deployed tool.
+
+**Decision**
+| Layer | Where | Why |
+|---|---|---|
+| Raw / source of truth | Organizer S3 bucket (read-only), mirrored to `data/raw/` with `scripts/download_data.sh` | Immutable input; the pipeline starts here |
+| ETL + contracts + lineage | Python + DuckDB → Parquet (bronze → silver → gold) | Deterministic and free; runs the same on every laptop and in CI; handles ~19M rows easily |
+| Operational/serving DB | Supabase Postgres (sa-east-1) | Auth covers the trusted test session; RLS gives per-customer isolation; audit log, handoff tickets, traces; already wired to Vercel |
+| App / API | Next.js on Vercel | Deployed link for the submission |
+| LLM | Claude via the Anthropic API (Bedrock is an alternative) | Simplest integration |
+
+Only the workflow-relevant slice goes into Supabase (the free tier is 500 MB).
+
+**Revisit if:** the slice exceeds the free tier (→ Supabase Pro, or Athena over S3), or we want the whole stack in AWS for the pitch.
+
+## D-002: Use case
+**Status:** open. Choose one of: account/payment inquiries, card support, transaction-dispute intake, credit-product eligibility. Decide from the contact-reason analysis of `call_center_interactions` and `complaints` (requirement #1: the problem is supported by data).

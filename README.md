@@ -29,12 +29,13 @@ docs/           meeting notes, decisions, honest "what's missing"
 ## Getting started
 ```bash
 npm install
+./scripts/download_data.sh    # needs `aws configure --profile factored` (keys: Data Dictionary p.2, never commit them)
 cp .env.example .env.local   # fill in server-only secrets
 npm run dev
 ```
 
 ## What's missing (keep this honest)
-- [ ] Dataset + final instructions
+- [x] Dataset + final instructions (S3; architecture in docs/decisions.md D-001)
 - [ ] Use case choice (D-002)
 - [ ] Baseline, system, evaluation harness
 - [ ] Observability, security (prompt-injection defenses, RLS), structured human handoff
