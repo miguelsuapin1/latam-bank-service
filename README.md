@@ -4,6 +4,8 @@ A bilingual (🇪🇸 Spanish / 🇧🇷 Portuguese) **banking customer-service 
 
 > Status: **scaffolding.** Dataset and final challenge instructions are pending. See [docs/meeting-notes.md](docs/meeting-notes.md) for requirements and [docs/decisions.md](docs/decisions.md) for open decisions.
 
+**Live:** https://latam-bank-service.vercel.app (auto-deploys from `main`)
+
 ## Stack (provisional)
 | Layer | Choice |
 |---|---|
