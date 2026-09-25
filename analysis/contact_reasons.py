@@ -31,6 +31,21 @@ QUERIES = {
                round(avg(csat), 2) as csat_avg, sum(n_csat) as csat_n
         from i left join sv using (interaction_id)
         group by 1 order by contacts desc""",
+    # Efficiency: agent time per first-contact resolution (mean AHT / FCR, lower is better) and
+    # how much of all agent time goes to contacts that were NOT resolved first time (rework).
+    # duration_seconds is null in 14% of rows at random; time shares use non-null rows only.
+    "Agent-time efficiency by contact reason": """
+        with i as (select reason_category r, (was_resolved='True') res, duration_seconds::double dur
+                   from call_center_interactions)
+        select r as reason,
+               round(100*sum(dur)/sum(sum(dur)) over (), 1) as agent_time_pct,
+               round(100*avg(res::int), 1) as fcr_pct,
+               round(avg(dur)/60 / avg(res::int), 2) as agent_min_per_fcr,
+               round(100*sum(dur) filter (where not res)/sum(dur), 1) as unresolved_time_within_reason_pct,
+               round(100*sum(dur) filter (where not res)/sum(sum(dur)) over (), 1) as unresolved_time_of_all_pct,
+               round(100*sum(dur) filter (where not res)/sum(sum(dur) filter (where not res)) over (), 1)
+                   as share_of_all_unresolved_time_pct
+        from i group by 1 order by agent_time_pct desc""",
     "Contact reasons by channel (share of each reason)": """
         select reason_category as reason, channel, count(*) as contacts,
                round(100*count(*)/sum(count(*)) over (partition by reason_category), 1) as pct_of_reason
