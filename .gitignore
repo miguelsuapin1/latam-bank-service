@@ -44,3 +44,10 @@ next-env.d.ts
 /data/raw/*
 !/data/raw/.gitkeep
 !.env.example
+
+# python
+.venv/
+__pycache__/
+
+# local analytical DBs (rebuilt from data/raw)
+/data/processed/*.duckdb

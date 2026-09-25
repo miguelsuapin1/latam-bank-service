@@ -22,4 +22,4 @@ Only the workflow-relevant slice goes into Supabase (the free tier is 500 MB).
 **Revisit if:** the slice exceeds the free tier (→ Supabase Pro, or Athena over S3), or we want the whole stack in AWS for the pitch.
 
 ## D-002: Use case
-**Status:** open. Choose one of: account/payment inquiries, card support, transaction-dispute intake, credit-product eligibility. Decide from the contact-reason analysis of `call_center_interactions` and `complaints` (requirement #1: the problem is supported by data).
+**Status:** proposed, awaiting team decision. Recommendation: **transaction-dispute intake** (unrecognized charges + wrongful fees; 40% of complaints; the complaint bucket has the worst first-contact resolution at 43.6% and 23% of agent hours). Alternative: account & payment inquiries (35% of contacts, but already 91.5% first-contact resolution). Evidence: [contact-reason-analysis.md](contact-reason-analysis.md).

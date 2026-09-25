@@ -34,6 +34,15 @@ cp .env.example .env.local   # fill in server-only secrets
 npm run dev
 ```
 
+### Data pipeline & analysis
+```bash
+uv sync                                   # Python deps (DuckDB, pandas)
+uv run python pipeline/bronze.py          # data/raw CSVs -> data/processed/bronze.duckdb (verbatim + lineage)
+(cd pipeline && uv run python dq_checks.py)   # -> reports/data_quality.md
+uv run python analysis/contact_reasons.py # -> reports/contact_reasons.md
+```
+Findings: [docs/contact-reason-analysis.md](docs/contact-reason-analysis.md) · issue register: [docs/data-issues.md](docs/data-issues.md)
+
 ## What's missing (keep this honest)
 - [x] Dataset + final instructions (S3; architecture in docs/decisions.md D-001)
 - [ ] Use case choice (D-002)
