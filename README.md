@@ -2,7 +2,7 @@
 
 A bilingual (🇪🇸 Spanish / 🇧🇷 Portuguese) **banking customer-service system** — not a chatbot. It understands the customer, uses the right tools, verifies that actions happened, knows when *not* to act, and hands off to a human with a structured summary.
 
-> Status: **scaffolding.** Dataset and final challenge instructions are pending. See [docs/meeting-notes.md](docs/meeting-notes.md) for requirements and [docs/decisions.md](docs/decisions.md) for open decisions.
+> Status: **scaffolding.** Official brief summarized in [docs/challenge.md](docs/challenge.md); dataset location pending. See [docs/meeting-notes.md](docs/meeting-notes.md) for kickoff notes and [docs/decisions.md](docs/decisions.md) for open decisions.
 
 **Live:** https://latam-bank-service-sigma.vercel.app (auto-deploys from `main`)
 
